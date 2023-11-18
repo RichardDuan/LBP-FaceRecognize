@@ -7,11 +7,11 @@
 #include "Queue.h"
 #define WIDE 242
 #define HIGH 393
-// ¶Ô3x3Í¼ÏñÓ¦ÓÃLBPËã·¨
+// å¯¹3x3å›¾åƒåº”ç”¨LBPç®—æ³•
 void computeLBP(Queue& pixelQueue, int image[9]) {
     int centerIndex = 4;
     unsigned char centerValue = image[centerIndex];
-    // ¼ÆËãLBP±àÂë
+    // è®¡ç®—LBPç¼–ç 
     for (int i = 0; i < 3; ++i) {
         pixelQueue.enqueue(image[i] >= image[centerIndex] ? 1 : 0);
     }
@@ -30,12 +30,12 @@ int binary_dec_Convert(char eigenvalue[9]) {
 }
 int Abstract_One_Area(int image[9]) {
 
-    // ÓÃÓÚ±£´æÃ¿¸öÏñËØµãµÄĞÅÏ¢µÄ¶ÓÁĞ
+    // ç”¨äºä¿å­˜æ¯ä¸ªåƒç´ ç‚¹çš„ä¿¡æ¯çš„é˜Ÿåˆ—
     Queue pixelQueue;
 
     char* eigenvalue = new char[8];
     int i = 0;
-    // ±éÀú3x3Í¼Ïñ£¬½«Ã¿¸öÏñËØµãµÄ»Ò¶ÈÖµ±È½Ï½á¹ûÈë¶ÓÁĞ
+    // éå†3x3å›¾åƒï¼Œå°†æ¯ä¸ªåƒç´ ç‚¹çš„ç°åº¦å€¼æ¯”è¾ƒç»“æœå…¥é˜Ÿåˆ—
     computeLBP(pixelQueue, image);
     while (!pixelQueue.isEmpty()) {
         eigenvalue[i] = pixelQueue.dequeue();
@@ -48,7 +48,7 @@ int Abstract_One_Area(int image[9]) {
     */
     return binary_dec_Convert(eigenvalue);
 }
-void Get_Part(int Matrix[][WIDE], int i, int j, int image_part[]) {  //½«Matrix[i][j]ÎªÖĞĞÄµÄ¾Å¹¬¸ñ×ª»¯³ÉÒ»Î¬Êı×é±£´æµ½imageÖĞ
+void Get_Part(int Matrix[][WIDE], int i, int j, int image_part[]) {  //å°†Matrix[i][j]ä¸ºä¸­å¿ƒçš„ä¹å®«æ ¼è½¬åŒ–æˆä¸€ç»´æ•°ç»„ä¿å­˜åˆ°imageä¸­
     int p = 0;
     for (int k = i - 1; k <= i + 1; k++) {
         for (int s = j - 1; s <= j + 1; s++)
@@ -69,34 +69,44 @@ void Caculate(int Matrix[][WIDE], double histogram[256]) {
     int image[9];
     for (int i = 0; i < HIGH; i++) {
         for (int j = 0; j < WIDE; j++) {
-            if (i != 0 && j != 0 && i != HIGH - 1 && j != WIDE - 1) {//È¥³ı±ß½ç
-                Get_Part(Matrix, i, j, image);//»ñÈ¡¾Å¹¬¸ñ
+            if (i != 0 && j != 0 && i != HIGH - 1 && j != WIDE - 1) {//å»é™¤è¾¹ç•Œ
+                Get_Part(Matrix, i, j, image);//è·å–ä¹å®«æ ¼
                 histogram[Abstract_One_Area(image)] += 1;
             }
         }
     }
 }
 int main() {
-    //ÊäÈëÒ»ÕÅÍ¼Æ¬µÄ»Ò¶È¾ØÕó£¬¼ÆËãÆäÌØÕ÷Öµ¾ØÕó
-    freopen("person5-2.txt", "r", stdin);//Ô´ÎÄ¼ş
-    double histogram1[256] = { 0 };//Í³¼ÆÖ±·½Í¼£¬±£´æLBPÌØÕ÷ÕıÖµµÄÆµ´Î
+    double chi;
+    //è¾“å…¥ä¸€å¼ å›¾ç‰‡çš„ç°åº¦çŸ©é˜µï¼Œè®¡ç®—å…¶ç‰¹å¾å€¼çŸ©é˜µ
+    freopen("person5-2.txt", "r", stdin);//æºæ–‡ä»¶
+    double histogram1[256] = { 0 };//ç»Ÿè®¡ç›´æ–¹å›¾ï¼Œä¿å­˜LBPç‰¹å¾æ­£å€¼çš„é¢‘æ¬¡
     int Matrix1[HIGH][WIDE] = { 0 };
-    Get_Matrix(Matrix1);   //ÏÈ»ñÈ¡¾ØÕó
-    Caculate(Matrix1, histogram1);//¼ÆËã¾ØÕóÃ¿¸öÏñËØµãµÄLBPÌØÕ÷Öµ£¬²¢°ÑÃ¿¸ö½á¹û±£´æµ½Í³¼ÆÖ±·½Í¼ÖĞ
+    Get_Matrix(Matrix1);   //å…ˆè·å–çŸ©é˜µ
+    Caculate(Matrix1, histogram1);//è®¡ç®—çŸ©é˜µæ¯ä¸ªåƒç´ ç‚¹çš„LBPç‰¹å¾å€¼ï¼Œå¹¶æŠŠæ¯ä¸ªç»“æœä¿å­˜åˆ°ç»Ÿè®¡ç›´æ–¹å›¾ä¸­
+    /*
     for (int i = 0; i < 256; i++) {
-        std::cout << histogram1[i] << ",";
+        std::cout << histogram1[i] << ",";   //æ‰“å°ç¬¬ä¸€ä¸ªç°åº¦çŸ©é˜µç‰¹å¾å€¼çš„ç»Ÿè®¡ç›´æ–¹å›¾
     }
-
-    freopen("person5-1.txt", "r", stdin);//Ô´ÎÄ¼ş
-    double histogram2[256] = { 0 };//Í³¼ÆÖ±·½Í¼£¬±£´æLBPÌØÕ÷ÕıÖµµÄÆµ´Î
+    */  
+    freopen("person7-1.txt", "r", stdin);//æºæ–‡ä»¶
+    double histogram2[256] = { 0 };//ç»Ÿè®¡ç›´æ–¹å›¾ï¼Œä¿å­˜LBPç‰¹å¾æ­£å€¼çš„é¢‘æ¬¡
     int Matrix2[HIGH][WIDE] = { 0 };
-    Get_Matrix(Matrix2);   //ÏÈ»ñÈ¡¾ØÕó
-    Caculate(Matrix2, histogram2);//¼ÆËã¾ØÕóÃ¿¸öÏñËØµãµÄLBPÌØÕ÷Öµ£¬²¢°ÑÃ¿¸ö½á¹û±£´æµ½Í³¼ÆÖ±·½Í¼ÖĞ
+    Get_Matrix(Matrix2);   //å…ˆè·å–çŸ©é˜µ
+    Caculate(Matrix2, histogram2);//è®¡ç®—çŸ©é˜µæ¯ä¸ªåƒç´ ç‚¹çš„LBPç‰¹å¾å€¼ï¼Œå¹¶æŠŠæ¯ä¸ªç»“æœä¿å­˜åˆ°ç»Ÿè®¡ç›´æ–¹å›¾ä¸­
+    /*
     for (int i = 0; i < 256; i++) {
-        std::cout << histogram2[i] << ",";
+        std::cout << histogram2[i] << ",";   //æ‰“å°ç¬¬äºŒä¸ªç°åº¦çŸ©é˜µç‰¹å¾å€¼çš„ç»Ÿè®¡ç›´æ–¹å›¾
     }
+    */
     HistogramNormalization(histogram1, histogram2);
-    std::cout<< std::endl;
-    std::cout<< chiSquaredDistance(histogram1, histogram2)<<std::endl;
+    //std::cout<< std::endl;
+    std::cout<< "chiæµ‹åº¦ä¸ºï¼š" <<( chi=chiSquaredDistance(histogram1, histogram2) )<< std::endl;
+    if (chi < (0.4 * (WIDE * HIGH)) / (204 * 165)) {
+        std::cout<<"æ˜¯åŒä¸€ä¸ªäºº"<<std::endl;
+    }
+    else {
+        std::cout << "ä¸æ˜¯åŒä¸€ä¸ªäºº" << std::endl;
+    }
     return 0;
 }
